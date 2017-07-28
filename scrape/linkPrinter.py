@@ -1,10 +1,7 @@
 from bs4 import BeautifulSoup
 import urllib2
 import re
-
-def pprint(l):
-    for e in l:
-        print e
+import pprint
 
 
 base_url = 'http://rickandmorty.wikia.com/wiki/List_of_Mortys_(Pocket_Mortys)'
