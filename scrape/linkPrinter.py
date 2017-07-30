@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 from pprint import pprint
-import urllib2
-import re
+from urllib2 import urlopen, urlretrieve
+from re import search
 
 baseUrl = 'http://rickandmorty.wikia.com'
 mortyTableUrl = baseUrl + '/wiki/List_of_Mortys_(Pocket_Mortys)'
@@ -27,6 +27,9 @@ pocketMortyImageTable = searchForTables(mortySoup)[0]
 imgTag = [tag for tag in pocketMortyImageTable.descendants if tag.name == "img" and "data-image-name" in tag.attrs and re.search('PM\-\d+\.png', tag["data-image-name"])][0]
 srcImageUrl = imgTag["src"]
 print srcImageUrl
+
+#download the image
+urllib2.urlretrieve(srcImageUrl, "test.png")
 
 
 
