@@ -10,18 +10,29 @@ def soupify(url):
     response = urllib2.urlopen(url)
     return BeautifulSoup(response.read(), 'html.parser')
 
+def searchForTables(soup):
+    return [e for e in soup.descendants if e.name == "table"]
+
+#base wiki page with all the morty table entries
 soup = soupify(mortyTableUrl)
-mortyTable = [e for e in soup.descendants if e.name == "table"][1]
+mortyTable = searchForTables(soup)[1]
 mortyTableEntries = [tag for tag in mortyTable.descendants if tag.name == "a" and "href" in tag.attrs if re.search('^/wiki/\w+$', tag["href"])]
 
 testTag = mortyTableEntries[0]
 
-url = baseUrl + testTag['href']
-mortySoup = soupify(url)
-print mortySoup.prettify()
+#inner morty image url
+testUrl = baseUrl + testTag['href']
+mortySoup = soupify(testUrl)
+pocketMortyImageTable = searchForTables(mortySoup)[0]
+imgTag = [tag for tag in pocketMortyImageTable.descendants if tag.name == "img" and "data-image-name" in tag.attrs and re.search('PM\-\d+\.png', tag["data-image-name"])][0]
+srcImageUrl = imgTag["src"]
+print srcImageUrl
 
 
 
+
+
+# PM-002.png
 
 # for tag in mortyTableEntries:
 #     url = baseUrl + tag['href']
