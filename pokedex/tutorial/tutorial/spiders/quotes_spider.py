@@ -13,6 +13,24 @@ class MySpider(CrawlSpider):
         self.logger.info('A page! %s', response.url)
         title = response.css('h1[class="page-header__title"]::text')
         article = response.css('article[id="WikiaMainContent"]')
+        quote = response.css('i::text')
+        infoBox = article.css('table[class="infobox-interior"]')
+        trs = infoBox.css('tr')
+        imageBox = trs[2]
+        typeInfo = trs[4]
+        sizeInfo = trs[5]
+        charInfo = trs[6]
+        lilMorty = trs[8]
+        campInfo = trs[10]
         yield {
-            'title' : title.extract()
+            'morty_page' : {
+                'title' : title.extract_first(),
+                'quote' : quote.extract_first(),
+                'bigImageLink' : imageBox.css('a::attr(href)').extract_first(),
+                'type' : typeInfo.css('a::attr(href)').extract_first(),
+                'height' : sizeInfo.css('td:nth-of-type(2)::text').extract_first(),
+                'weight' : sizeInfo.css('td:nth-of-type(4)::text').extract_first(),
+                'characteristics' : charInfo.css('td:nth-of-type(2)::text').extract_first(),
+                # 'lilImageLink' : lilMorty.css('a::attr(href)').extract_first()
+            }
         }
