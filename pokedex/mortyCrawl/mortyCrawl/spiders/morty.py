@@ -23,14 +23,12 @@ class MySpider(CrawlSpider):
         lilMorty = trs[8]
         campInfo = trs[10]
         yield {
-            'morty_page' : {
-                'title' : title.extract_first(),
-                'quote' : quote.extract_first(),
-                'bigImageLink' : imageBox.css('a::attr(href)').extract_first(),
-                'type' : typeInfo.css('a::attr(href)').extract_first(),
-                'height' : sizeInfo.css('td:nth-of-type(2)::text').extract_first(),
-                'weight' : sizeInfo.css('td:nth-of-type(4)::text').extract_first(),
-                'characteristics' : charInfo.css('td:nth-of-type(2)::text').extract_first(),
-                # 'lilImageLink' : lilMorty.css('a::attr(href)').extract_first()
-            }
+            'title' : title.extract_first(),
+            'quote' : quote.extract_first(),
+            'bigImageLink' : imageBox.css('a::attr(href)').extract_first(),
+            'type' : typeInfo.css('a::attr(href)').extract_first(),
+            'height' : sizeInfo.css('td:nth-of-type(2)::text').extract_first(),
+            'weight' : sizeInfo.css('td:nth-of-type(4)::text').extract_first(),
+            'characteristics' : charInfo.css('td:nth-of-type(2)::text').extract_first(),
+            # 'lilImageLink' : lilMorty.css('a::attr(href)').extract_first()
         }
