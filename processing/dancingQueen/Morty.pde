@@ -2,8 +2,8 @@ class Morty {
   PImage img;
   float x, y, img_width, img_height;
   
-  Morty(String img_path, float x, float y, float img_width, float img_height){
-    img = loadImage(img_path);
+  Morty(PImage img, float x, float y, float img_width, float img_height){
+    this.img = img;
     this.x = x;
     this.y = y;
     this.img_width = img_width;

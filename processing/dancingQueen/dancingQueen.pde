@@ -1,20 +1,27 @@
-ArrayList<Morty> mortyList;
-//Morty m;
-float start = 2;
-float end = 100;
+ArrayList<Morty> mortys = new ArrayList<Morty>();
+float num_morties = 100;
+float scale = 2;
 void setup() {
   // Images must be in the "data" directory to load correctly
-  size(640,320);
-  for(int i = start; i < end; i += 1){
-    String base = "PM"
-    mortyList.add(new Morty);
+  size(1600, 800);
+  surface.setResizable(true);
+  for(int i = 0; i < num_morties; i += 1){
+    String path_string = "../mortys/morty" + i + ".png";
+    mortys.add(new Morty(loadImage(path_string), random(0,width), random(0,height), 20*scale, 40*scale));
   }
-  m = new Morty("PM-002.png", random(0,width), random(0,height), 50, 120);
 }
 
 void draw() {
   background(127);
-  m.display();
-  m.moveRight();
-  m.checkEdges();
+  updateMortys();
+}
+
+
+void updateMortys(){
+  for(int i = 0; i < num_morties; i += 1){
+    Morty m = mortys.get(i);
+    m.display();
+    m.moveRight();
+    m.checkEdges();
+  }
 }
