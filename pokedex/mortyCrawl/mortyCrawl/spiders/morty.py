@@ -1,6 +1,7 @@
 import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
+from bs4 import BeautifulSoup
 
 class MySpider(CrawlSpider):
     name = 'morty'
@@ -10,25 +11,38 @@ class MySpider(CrawlSpider):
     )
 
     def parse_item(self, response):
+        #would like to rewrite the parser using after extracting big dom elements
         self.logger.info('A page! %s', response.url)
-        title = response.css('h1[class="page-header__title"]::text')
-        article = response.css('article[id="WikiaMainContent"]')
-        quote = response.css('i::text')
-        infoBox = article.css('table[class="infobox-interior"]')
-        trs = infoBox.css('tr')
-        imageBox = trs[2]
-        typeInfo = trs[4]
-        sizeInfo = trs[5]
-        charInfo = trs[6]
-        lilMorty = trs[8]
-        campInfo = trs[10]
+        title = response.css('h1[class="page-header__title"]::text').extract_first()
+        quote = response.css('i::text').extract_first()
+        infoBoxHTML = response.css('table[class="infobox-interior"]').extract_first()
+        infoBoxSoup = BeautifulSoup(infoBoxHTML, 'html.parser')
+        tableRowSoups = infoBoxSoup.find_all('tr')
+
+        #info box specfic soups
+        titleSoup = tableRowSoups[0]
+        topLilIconSoup = tableRowSoups[1]
+        bigImageSoup = tableRowSoups[2]
+        basicInfoBarSoup = tableRowSoups[3]
+        typeSoup = tableRowSoups[4]
+        bodyInfoSoup = tableRowSoups[5]
+        characteristicsSoup = tableRowSoups[6]
+        evolutionBarSoup = tableRowSoups[7]
+        evolutionSoup = tableRowSoups[8]
+        campaignInfoBarSoup = tableRowSoups[9]
+        campaignInfoSoup = tableRowSoups[10]
+        multiPlayerBarSoup = tableRowSoups[11]
+        multiPlayerInfo1Soup = tableRowSoups[12]
+        multiPlayerInfo2Soup = tableRowSoups[13]
+
+        #yield json of morty info
         yield {
-            'title' : title.extract_first(),
-            'quote' : quote.extract_first(),
-            'bigImageLink' : imageBox.css('a::attr(href)').extract_first(),
-            'type' : typeInfo.css('a::attr(href)').extract_first(),
-            'height' : sizeInfo.css('td:nth-of-type(2)::text').extract_first(),
-            'weight' : sizeInfo.css('td:nth-of-type(4)::text').extract_first(),
-            'characteristics' : charInfo.css('td:nth-of-type(2)::text').extract_first(),
-            # 'lilImageLink' : lilMorty.css('a::attr(href)').extract_first()
+            'title' : titleSoup.big.text.strip().strip("\""),
+            'lil_icon' : {'file_name' : topLilIconSoup.img["data-image-name"].strip().strip("\""), 'src' : topLilIconSoup.img["src"].strip().strip("\"")},
+            'big_image' : {'file_name' : bigImageSoup.img["data-image-name"].strip().strip("\""), 'src' : bigImageSoup.img["src"].strip().strip("\"")},
+            'basic_info' : {
+                'typeInfo' : {'name' : typeSoup.img['alt'].strip().strip("\""), 'file_name' : typeSoup.img["data-image-key"].strip().strip("\""), 'src' : typeSoup.img['src'].strip().strip("\"")},
+                'bodyInfo' : {'height' : bodyInfoSoup.td.next_sibling.text.strip().strip("\""), 'weight' : bodyInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
+            },
+            'campaignInfo' : {'badges_req' : campaignInfoSoup.td.next_sibling.text.strip().strip("\""), 'rare' : campaignInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
         }
