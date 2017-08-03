@@ -16,8 +16,7 @@ class MySpider(CrawlSpider):
         title = response.css('h1[class="page-header__title"]::text').extract_first()
         quote = response.css('i::text').extract_first()
         infoBoxHTML = response.css('table[class="infobox-interior"]').extract_first()
-        infoBoxSoup = BeautifulSoup(infoBoxHTML, 'html.parser')
-        tableRowSoups = infoBoxSoup.find_all('tr')
+        tableRowSoups = BeautifulSoup(infoBoxHTML, 'html.parser').find_all('tr')
 
         #info box specfic soups
         titleSoup = tableRowSoups[0]
