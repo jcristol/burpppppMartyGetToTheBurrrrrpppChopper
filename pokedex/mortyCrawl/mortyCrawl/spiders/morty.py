@@ -3,6 +3,15 @@ from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from bs4 import BeautifulSoup
 
+#helper functions
+def evoDicts(soup):
+    res = []
+    allLinks = soup.find_all('a')
+    for link in allLinks:
+        img = link.img
+        res.append({'link' : img["data-src"]})
+    return res
+
 class MySpider(CrawlSpider):
     name = 'morty'
     start_urls = ["http://rickandmorty.wikia.com/wiki/List_of_Mortys_(Pocket_Mortys)"]
@@ -36,12 +45,13 @@ class MySpider(CrawlSpider):
 
         #yield json of morty info
         yield {
-            'title' : titleSoup.big.text.strip().strip("\""),
+            'article' : {'title' : title.strip(), 'quote' : quote.strip()},
             'lil_icon' : {'file_name' : topLilIconSoup.img["data-image-name"].strip().strip("\""), 'src' : topLilIconSoup.img["src"].strip().strip("\"")},
             'big_image' : {'file_name' : bigImageSoup.img["data-image-name"].strip().strip("\""), 'src' : bigImageSoup.img["src"].strip().strip("\"")},
             'basic_info' : {
-                'typeInfo' : {'name' : typeSoup.img['alt'].strip().strip("\""), 'file_name' : typeSoup.img["data-image-key"].strip().strip("\""), 'src' : typeSoup.img['src'].strip().strip("\"")},
-                'bodyInfo' : {'height' : bodyInfoSoup.td.next_sibling.text.strip().strip("\""), 'weight' : bodyInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
+                'type_info' : {'name' : typeSoup.img['alt'].strip().strip("\""), 'file_name' : typeSoup.img["data-image-key"].strip().strip("\""), 'src' : typeSoup.img['src'].strip().strip("\"")},
+                'body_info' : {'height' : bodyInfoSoup.td.next_sibling.text.strip().strip("\""), 'weight' : bodyInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
             },
-            'campaignInfo' : {'badges_req' : campaignInfoSoup.td.next_sibling.text.strip().strip("\""), 'rare' : campaignInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
+            'evolution_info' : evoDicts(evolutionSoup),
+            'campaign_info' : {'badges_req' : campaignInfoSoup.td.next_sibling.text.strip().strip("\""), 'rare' : campaignInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
         }
