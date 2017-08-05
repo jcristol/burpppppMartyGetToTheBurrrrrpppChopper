@@ -1,4 +1,4 @@
-import gevent, urllib2, os, errno, shutil, base64
+import gevent, urllib, os, errno, shutil, base64
 import json
 from gevent import monkey
 
@@ -23,32 +23,36 @@ def make_dir(directory):
             shutil.rmtree(directory)
             make_dir(directory)
 
-def download_image(src, dest):
-    resource = urllib2.urlopen(src)
-    output = open(dest,"wb")
-    output.write(resource.read())
-    output.close()
-
 def process_morty(morty):
     name = morty['title'].replace(" ", "_")
     mortyDir = base_dir + '/' + name
     #make this morty's base directory
     make_dir(mortyDir)
+    morty['error'] = []
+    #record json in a info.json
+    try:
+        print "Downloading big image for %s" % name
+        # #download full image
+        urllib.urlretrieve(morty["big_image"]["src"], mortyDir + "/big_image.png")
+    except:
+        print "Error downloading big image for %s" % name
+        morty['error'].append({'big_image' : True})
+    try:
+        print "Downloading icon image for %s" % name
+        urllib.urlretrieve(morty["lil_icon"]["src"], mortyDir + "/icon.png")
+    except:
+        print "Error downloading icon image for %s" % name
+        morty['error'].append({'icon' : True})
+    try:
+        print "Downloading type image for %s" % name
+        urllib.urlretrieve(morty['basic_info']['type_info']['src'], mortyDir + "/type.png")
+    except:
+        print "Error downloading type image for %s" % name
+        morty['error'].append({'type' : True})
+
     #record json in a info.json
     jFile = open(mortyDir + "/info.json","w+")
     jFile.write(json.dumps(morty))
-    #something is wrong with my strings
-    # download_image(morty["big_image"]["src"], mortyDir + "/big_image.png")
-    # #download full image
-    import code
-    code.interact(local=locals())
-    # urllib.urlretrieve(morty["big_image"]["src"], mortyDir + "/big_image.png")
-    # #download icon
-    # urllib.urlretrieve(morty["lil_icon"]["src"], mortyDir + "/icon.png")
-    # #download type picture
-    # urllib.urlretrieve(morty['basic_info']['type_info']['src'], mortyDir + "/type.png")
-
-
 
 
 
@@ -66,6 +70,5 @@ sounds = json.loads(open('sounds.json', 'r').read())
 #make a data directory this is the deliverable
 
 make_dir(base_dir)
-jobs = [gevent.spawn(process_morty, morty) for morty in mortys]
-gevent.joinall(jobs)
+[process_morty(morty) for morty in mortys]
 print("all done")
