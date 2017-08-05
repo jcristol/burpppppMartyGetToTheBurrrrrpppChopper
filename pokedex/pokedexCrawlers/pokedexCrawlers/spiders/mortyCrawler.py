@@ -16,7 +16,7 @@ class MortycrawlerSpider(CrawlSpider):
         self.logger.info('A page! %s', response.url)
         title = response.css('h1[class="page-header__title"]::text').extract_first()
         quote = response.css('i::text').extract_first()
-        infoBoxHTML = response.css('table[class="infobox-interior"]').extract_first()
+        infoBoxHTML = response.css('table[class="infobox-interior"][cellspacing]').extract_first()
         tableRowSoups = BeautifulSoup(infoBoxHTML, 'html.parser').find_all('tr')
 
         #info box specfic soups
@@ -41,8 +41,8 @@ class MortycrawlerSpider(CrawlSpider):
             'lil_icon' : {'file_name' : topLilIconSoup.img["data-image-name"].strip().strip("\""), 'src' : topLilIconSoup.img["src"].strip().strip("\"")},
             'big_image' : {'file_name' : bigImageSoup.img["data-image-name"].strip().strip("\""), 'src' : bigImageSoup.img["src"].strip().strip("\"")},
             'basic_info' : {
-                'typeInfo' : {'name' : typeSoup.img['alt'].strip().strip("\""), 'file_name' : typeSoup.img["data-image-key"].strip().strip("\""), 'src' : typeSoup.img['src'].strip().strip("\"")},
-                'bodyInfo' : {'height' : bodyInfoSoup.td.next_sibling.text.strip().strip("\""), 'weight' : bodyInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
+                'type_info' : {'name' : typeSoup.img['alt'].strip().strip("\""), 'file_name' : typeSoup.img["data-image-key"].strip().strip("\""), 'src' : typeSoup.img['src'].strip().strip("\"")},
+                'body_info' : {'height' : bodyInfoSoup.td.next_sibling.text.strip().strip("\""), 'weight' : bodyInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
             },
-            'campaignInfo' : {'badges_req' : campaignInfoSoup.td.next_sibling.text.strip().strip("\""), 'rare' : campaignInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
+            'campaign_info' : {'badges_req' : campaignInfoSoup.td.next_sibling.text.strip().strip("\""), 'rare' : campaignInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
         }
