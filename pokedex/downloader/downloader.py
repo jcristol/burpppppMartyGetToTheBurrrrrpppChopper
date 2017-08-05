@@ -40,8 +40,8 @@ def process_morty(morty):
     #something is wrong with my strings
     # download_image(morty["big_image"]["src"], mortyDir + "/big_image.png")
     # #download full image
-    # import code
-    # code.interact(local=locals())
+    import code
+    code.interact(local=locals())
     # urllib.urlretrieve(morty["big_image"]["src"], mortyDir + "/big_image.png")
     # #download icon
     # urllib.urlretrieve(morty["lil_icon"]["src"], mortyDir + "/icon.png")
