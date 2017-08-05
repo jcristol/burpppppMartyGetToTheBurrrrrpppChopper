@@ -55,9 +55,6 @@ def process_morty(morty):
     jFile.write(json.dumps(morty))
 
 
-
-
-
 #Main Code
 
 # patches stdlib (including socket and ssl modules) to cooperate with other greenlets
