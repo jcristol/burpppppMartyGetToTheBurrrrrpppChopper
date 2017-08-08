@@ -62,12 +62,11 @@
     </div>
     <div id="right">
       <div id="stats">
-        <strong>Name :</strong> Psyduck<br/>
-        <strong>Type :</strong> Water<br/>
-        <strong>Height :</strong> 2'072''<br/>
-        <strong>Weight :</strong> 43.2 lbs.<br/><br/>
-        <strong>The duck Pokemon</strong><br/>
-        Uses mysterious powers to perform various attacks.
+        <strong>Name :</strong> {{info['article']['title']}}<br/>
+        <strong>Type :</strong> {{info['basic_info']['type_info']['name'].replace('PM', '').strip()}}<br/>
+        <strong>Height :</strong> {{info['basic_info']['body_info']['height']}}<br/>
+        <strong>Weight :</strong> {{info['basic_info']['body_info']['weight']}}<br/><br/>
+        {{info['article']['quote']}}
       </div>
       <div id="blueButtons1">
         <div class="blueButton"></div>
