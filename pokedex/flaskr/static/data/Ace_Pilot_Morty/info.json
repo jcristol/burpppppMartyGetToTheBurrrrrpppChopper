@@ -1,0 +1,27 @@
+{
+  "big_image": {
+    "file_name": "PM-178.png",
+    "src": "https://vignette2.wikia.nocookie.net/rickandmorty/images/3/38/PM-178.png/revision/latest/scale-to-width-down/150?cb=20170406070024"
+  },
+  "campaign_info": {
+    "badges_req": "34",
+    "rare": "Yes"
+  },
+  "lil_icon": {
+    "file_name": "PM-icon-178.png",
+    "src": "https://vignette4.wikia.nocookie.net/rickandmorty/images/e/e8/PM-icon-178.png/revision/latest/scale-to-width-down/25?cb=20170406070414"
+  },
+  "title": "Ace Pilot Morty",
+  "basic_info": {
+    "body_info": {
+      "weight": "135.2 lbs",
+      "height": "5'3"
+    },
+    "type_info": {
+      "file_name": "PM_Scissors.png",
+      "name": "PM Scissors",
+      "src": "https://vignette2.wikia.nocookie.net/rickandmorty/images/2/24/PM_Scissors.png/revision/latest/scale-to-width-down/30?cb=20160118021612"
+    }
+  },
+  "error": []
+}
