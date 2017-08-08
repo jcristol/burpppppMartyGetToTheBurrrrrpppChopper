@@ -8,7 +8,9 @@ import os, errno, shutil
 def make_dir(directory):
     try:
         os.makedirs(directory)
+        print "success"
     except OSError as e:
+        print "failure"
         if e.errno != errno.EEXIST:
             raise
         else:
@@ -17,9 +19,32 @@ def make_dir(directory):
 
 make_dir('data')
 
-def store_info(info):
+def store_info(morty):
     name = morty['article']['title'].replace(" ", "_")
-    
+    mortyDir = 'data' + '/' + name
+    make_dir(mortyDir)
+    import code
+    code.interact(local=locals())
+    try:
+        print "Downloading big image for %s" % name
+        urllib.urlretrieve(morty["big_image"]["src"], mortyDir + "/big_image.png")
+    except:
+        "Fatal error could not download big image"
+        shutil.rmtree(mortyDir)
+        return
+    try:
+        print "Downloading icon image for %s" % name
+        urllib.urlretrieve(morty["lil_icon"]["src"], mortyDir + "/icon.png")
+    except:
+        print "Error downloading icon image for %s" % name
+    try:
+        print "Downloading type image for %s" % name
+        urllib.urlretrieve(morty['basic_info']['type_info']['src'], mortyDir + "/type.png")
+    except:
+        print "Error downloading type image for %s" % name
+    jFile = open(mortyDir + "/info.json","w+")
+    jFile.write(json.dumps(morty))
+
 
 class MortycrawlerSpider(CrawlSpider):
     name = 'mortyCrawler'
@@ -52,7 +77,6 @@ class MortycrawlerSpider(CrawlSpider):
         multiPlayerInfo1Soup = tableRowSoups[12]
         multiPlayerInfo2Soup = tableRowSoups[13]
 
-        #yield json of morty info
         mortyInfo = {
             'article' : {'title' : title.strip(), 'quote' : quote.strip()},
             'lil_icon' : {'file_name' : topLilIconSoup.img["data-image-name"].strip().strip("\""), 'src' : topLilIconSoup.img["src"].strip().strip("\"")},
@@ -63,6 +87,8 @@ class MortycrawlerSpider(CrawlSpider):
             },
             'campaign_info' : {'badges_req' : campaignInfoSoup.td.next_sibling.text.strip().strip("\""), 'rare' : campaignInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
         }
+        store_info(mortyInfo)
+        #yield json of morty info
         yield {
             'article' : {'title' : title.strip(), 'quote' : quote.strip()},
             'lil_icon' : {'file_name' : topLilIconSoup.img["data-image-name"].strip().strip("\""), 'src' : topLilIconSoup.img["src"].strip().strip("\"")},
