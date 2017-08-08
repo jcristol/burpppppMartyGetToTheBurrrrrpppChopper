@@ -3,6 +3,23 @@ import scrapy
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 from bs4 import BeautifulSoup
+import os, errno, shutil
+#util functions
+def make_dir(directory):
+    try:
+        os.makedirs(directory)
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+        else:
+            shutil.rmtree(directory)
+            make_dir(directory)
+
+make_dir('data')
+
+def store_info(info):
+    name = morty['article']['title'].replace(" ", "_")
+    
 
 class MortycrawlerSpider(CrawlSpider):
     name = 'mortyCrawler'
@@ -36,6 +53,16 @@ class MortycrawlerSpider(CrawlSpider):
         multiPlayerInfo2Soup = tableRowSoups[13]
 
         #yield json of morty info
+        mortyInfo = {
+            'article' : {'title' : title.strip(), 'quote' : quote.strip()},
+            'lil_icon' : {'file_name' : topLilIconSoup.img["data-image-name"].strip().strip("\""), 'src' : topLilIconSoup.img["src"].strip().strip("\"")},
+            'big_image' : {'file_name' : bigImageSoup.img["data-image-name"].strip().strip("\""), 'src' : bigImageSoup.img["src"].strip().strip("\"")},
+            'basic_info' : {
+                'type_info' : {'name' : typeSoup.img['alt'].strip().strip("\""), 'file_name' : typeSoup.img["data-image-key"].strip().strip("\""), 'src' : typeSoup.img['src'].strip().strip("\"")},
+                'body_info' : {'height' : bodyInfoSoup.td.next_sibling.text.strip().strip("\""), 'weight' : bodyInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
+            },
+            'campaign_info' : {'badges_req' : campaignInfoSoup.td.next_sibling.text.strip().strip("\""), 'rare' : campaignInfoSoup.td.next_sibling.next_sibling.next_sibling.text.strip().strip("\"")}
+        }
         yield {
             'article' : {'title' : title.strip(), 'quote' : quote.strip()},
             'lil_icon' : {'file_name' : topLilIconSoup.img["data-image-name"].strip().strip("\""), 'src' : topLilIconSoup.img["src"].strip().strip("\"")},
