@@ -1,5 +1,5 @@
 ### BURRPRPPPPPPPPPP
 
 
-[title](clay.jpg)
+[title](./clay.jpg)
 
