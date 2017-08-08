@@ -1,11 +1,22 @@
 import urllib, os, errno, shutil, base64
 import json
+import re
 
 #Globals
 
 base_dir = 'data'
 
 #Functions
+
+def process_sound(sound):
+    # m = re.search('original/(.*)\?', sound)
+    # file_name = m.group(1)
+    try:
+        print "Downloading the sound %s" % sound
+        urllib.urlretrieve(sound, base_dir + '/' + 'sound.wav')
+    except:
+        print "Error Downloading the sound %s " % sound
+
 
 """
 Try and make a directory
@@ -53,10 +64,18 @@ def process_morty(morty):
     jFile = open(mortyDir + "/info.json","w+")
     jFile.write(json.dumps(morty))
 
+
 #json objects
 mortys = json.loads(open('morty_info.json', 'r').read())
-sounds = json.loads(open('sounds.json', 'r').read()
-#fetch all the wiki morty information
+[sounds] = json.loads(open('sounds.json', 'r').read())
+
+# fetch all the wiki morty information
+# make_dir(base_dir)
+# [process_morty(morty) for morty in mortys]
+
+#fetch sounds
+base_dir = 'sounds'
 make_dir(base_dir)
-[process_morty(morty) for morty in mortys]
+#[process_sound(sound) for sound in sounds['links']]
+process_sound('http://peal.io/download/ldaze')
 print("all done")
