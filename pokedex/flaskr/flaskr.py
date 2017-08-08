@@ -26,12 +26,9 @@ def morty_dex(morty):
     except ValueError:
         print "Ooppps thats not a morty"
         return redirect(url_for('index'))
-    big_image = imagePaths[index]
-    icon = iconPaths[index]
-    info = infoJson[index]
-    import code
-    code.interact(local=locals())
-    return render_template()
+    big_image = imagePaths[index][1:]
+    mortyInfo = infoJson[index]
+    return render_template('hello.html', image=big_image, info=mortyInfo)
 
 @app.route('/mortys')
 def base():
