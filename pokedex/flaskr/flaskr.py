@@ -36,4 +36,5 @@ def base():
 
 @app.route('/')
 def index():
-    return "Hello your at the index"
+    # return "Hello your at the index"
+    return render_template('pokedex.html')
