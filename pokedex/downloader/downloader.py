@@ -1,6 +1,5 @@
-import gevent, urllib, os, errno, shutil, base64
+import urllib, os, errno, shutil, base64
 import json
-from gevent import monkey
 
 #Globals
 
@@ -24,7 +23,7 @@ def make_dir(directory):
             make_dir(directory)
 
 def process_morty(morty):
-    name = morty['title'].replace(" ", "_")
+    name = morty['article']['title'].replace(" ", "_")
     mortyDir = base_dir + '/' + name
     #make this morty's base directory
     make_dir(mortyDir)
@@ -54,17 +53,10 @@ def process_morty(morty):
     jFile = open(mortyDir + "/info.json","w+")
     jFile.write(json.dumps(morty))
 
-
-#Main Code
-
-# patches stdlib (including socket and ssl modules) to cooperate with other greenlets
-monkey.patch_all()
-
 #json objects
 mortys = json.loads(open('morty_info.json', 'r').read())
 sounds = json.loads(open('sounds.json', 'r').read())
 
-#make a data directory this is the deliverable
 
 make_dir(base_dir)
 [process_morty(morty) for morty in mortys]
