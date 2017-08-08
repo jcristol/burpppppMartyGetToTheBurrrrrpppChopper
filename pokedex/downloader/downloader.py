@@ -55,9 +55,8 @@ def process_morty(morty):
 
 #json objects
 mortys = json.loads(open('morty_info.json', 'r').read())
-sounds = json.loads(open('sounds.json', 'r').read())
-
-
+sounds = json.loads(open('sounds.json', 'r').read()
+#fetch all the wiki morty information
 make_dir(base_dir)
 [process_morty(morty) for morty in mortys]
 print("all done")
