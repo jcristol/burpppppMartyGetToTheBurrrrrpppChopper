@@ -8,6 +8,8 @@ import random
 
 app = Flask(__name__)
 
+mortyIndex = 0
+
 # The scraped Data yoooooo!!!!!!!!!!!!!!!!!!!!!!!!!!
 mortyDataPaths = []
 mortys = []
@@ -27,6 +29,23 @@ for filename in os.listdir('./static/sounds'):
     if filename.endswith(".wav"):
         soundPaths.append("./static/sounds/" + filename)
 
+@app.route('/right')
+def right_morty():
+    global mortyIndex
+    mortyIndex = (mortyIndex + 1) % (len(mortys))
+    print "len %i" % len(mortys)
+    print "index %i" % mortyIndex
+    return redirect(url_for('display_morty', morty=mortys[mortyIndex]))
+
+@app.route('/left')
+def left_morty():
+    global mortyIndex
+    mortyIndex = mortyIndex - 1
+    if mortyIndex < 0:
+        mortyIndex = len(mortys) - 1
+    print "len %i" % len(mortys)
+    print "index %i" % mortyIndex
+    return redirect(url_for('display_morty', morty=mortys[mortyIndex]))
 
 @app.route('/mortydex/<morty>')
 def display_morty(morty):

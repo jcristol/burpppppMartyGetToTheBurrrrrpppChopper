@@ -68,7 +68,7 @@
         <strong>Name :</strong> {{info['article']['title']}}<br/>
         <strong>Type :</strong> {{info['basic_info']['type_info']['name'].replace('PM', '').strip()}}<br/>
         <strong>Height :</strong> {{info['basic_info']['body_info']['height']}}<br/>
-        <strong>Weight :</strong> {{info['basic_info']['body_info']['weight']}}<br/><br/>
+        <strong>Weight :</strong> {{info['basic_info']['body_info']['weight']}}<br/>
         {{info['article']['quote']}}
       </div>
       <div id="blueButtons1">
@@ -89,8 +89,12 @@
       <div id="miniButtonGlass5"></div>
       <div id="barbutton3"></div>
       <div id="barbutton4"></div>
-      <div id="yellowBox1"></div>
-      <div id="yellowBox2"></div>
+      <a href="{{ url_for('left_morty') }}">
+        <div id="yellowBox1"></div>
+      </a>
+      <a href="{{ url_for('right_morty') }}">
+        <div id="yellowBox2"></div>
+      </a>
       <div id="bg_curve1_right"></div>
       <div id="bg_curve2_right"></div>
       <div id="curve1_right"></div>
