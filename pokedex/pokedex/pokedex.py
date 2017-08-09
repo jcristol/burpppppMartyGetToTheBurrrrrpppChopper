@@ -61,4 +61,4 @@ def display_morty(morty):
 
 @app.route('/')
 def index():
-    return "Hello you're at the index"
+    return redirect(url_for('display_morty', morty=random.choice(mortys)))
